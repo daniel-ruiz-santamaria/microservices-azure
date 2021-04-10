@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/98cbdc80-8a70-4409-9363-b3d9aa7408fb/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/tweets-backend",
+    "appService.deploySubpath": "."
+}

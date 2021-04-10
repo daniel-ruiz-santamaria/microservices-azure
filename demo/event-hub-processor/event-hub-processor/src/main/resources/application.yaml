@@ -1,0 +1,61 @@
+#app:
+#  persistence:
+#    datasource:
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      username: 'tweets'
+#      password: 'iNFIERN0'
+#      url: jdbc:mysql://demo-tweets.mysql.database.azure.com:3306/tweets?useSSL=true&createDatabaseIfNotExist=true
+#    jpa:
+#      dialect: org.hibernate.dialect.MySQL5Dialect
+#      generate-ddl: true
+#      ddl-auto: create
+#      show-sql: true
+#      format_sql: true
+#      use_sql_comments: true
+#      properties:
+#        hibernate.temp.use_jdbc_metadata_defaults: false
+
+spring:
+  datasource:
+    url: jdbc:mysql://demo-tweets.mysql.database.azure.com:3306/tweets?useSSL=true&createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: tweets
+    password: iNFIERN0
+    initialization-mode: always
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+  cloud:
+    azure:
+      eventhub:
+        connection-string: Endpoint=sb://demo-tweeter-ns.servicebus.windows.net/;SharedAccessKeyName=RootmanageSharedAccesKey;SharedAccessKey=1EoAuJT3F70fCYkrfpuZCGwhSnWWWoPlDVvyjHqd1x0=;EntityPath=tweets
+        checkpoint-storage-account: tweetsdemostorage
+        checkpoint-access-key: BgeZiXiRL/VKQvd3f6plT+mf442TOabyUu9soWV59LL9Dl3hgNPfgTqAgGxVUdnluiE1CiKFWW+Sk6R0jA0r/A==
+        checkpoint-container: tweets
+
+    stream:
+      bindings:
+        consume-in-0:
+          destination: tweets
+          group: $Default
+        supply-out-0:
+          destination: tweets
+
+      eventhub:
+        bindings:
+          consume-in-0:
+            consumer:
+              checkpoint-mode: MANUAL
+      function:
+        definition: consume;supply;
+      poller:
+        initial-delay: 0
+        fixed-delay: 60000
+
+logging:
+  level:
+    org:
+      springframework:
+        jdbc:
+          core: DEBUG
